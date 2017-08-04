@@ -65,7 +65,7 @@ def getPosts(nick, n=100):
     return posts
 
 def getTweets(nick, n=500):
-    with open('/home/dad/Documents/twaudit/config.json') as data_file: jsons = json.load(data_file)
+    with open('config.json') as data_file: jsons = json.load(data_file)
     auth = tweepy.OAuthHandler(jsons['twitter']['consumer_key']
                              , jsons['twitter']['consumer_secret'])
     auth.set_access_token(jsons['twitter']['access_token_key']
@@ -76,7 +76,7 @@ def getTweets(nick, n=500):
         
     return tweets
 
-nick = 'nthcolumn' # hate this guy joosters 
+nick = 'shalmanese' # hate this guy joosters 
 posts = getPosts(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
@@ -90,4 +90,3 @@ nick = 'weev' # hate this guy
 posts = getReddit(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
-
