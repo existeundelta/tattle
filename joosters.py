@@ -65,11 +65,11 @@ def getPosts(nick, n=100):
     return posts
 
 def getTweets(nick, n=500):
-    with open('config.json') as data_file: jsons = json.load(data_file)
-    auth = tweepy.OAuthHandler(jsons['twitter']['consumer_key']
-                             , jsons['twitter']['consumer_secret'])
-    auth.set_access_token(jsons['twitter']['access_token_key']
-                        , jsons['twitter']['access_token_secret'])
+    with open('config.json') as data_file: twitter = json.load(data_file)
+    auth = tweepy.OAuthHandler(twitter['consumer_key']
+                             , twitter['consumer_secret'])
+    auth.set_access_token(twitter['access_token_key']
+                        , twitter['access_token_secret'])
     api = tweepy.API(auth)
     tweets = api.user_timeline(nick, count=n)
     tweets = [tweet.text.encode("utf-8") for tweet in tweets]
