@@ -72,21 +72,32 @@ def getTweets(nick, n=500):
                         , twitter['access_token_secret'])
     api = tweepy.API(auth)
     tweets = api.user_timeline(nick, count=n)
-    tweets = [tweet.text.encode("utf-8") for tweet in tweets]
-        
+    tweets = [tweet.text.encode("utf-8") if tweet.author.screen_name == nick else None for tweet in tweets]
+    
     return tweets
 
-nick = 'shalmanese' # hate this guy joosters 
-posts = getPosts(nick, n=500)
+nick = 'MalcolmNance'
+posts = getTweets(nick, n=100)
 for post in posts[10:]:
     ai.train(nick, post)
 
-nick = 'th3j35t3r' # hate this guy 
-posts = getTweets(nick, n=500)
+nick = 'th3j35t3r' 
+posts = getTweets(nick, n=100)
 for post in posts[10:]:
     ai.train(nick, post)
+
+
+"""
     
 nick = 'weev' # hate this guy 
 posts = getReddit(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
+
+
+nick = 'shalmanese' # hate this guy joosters 
+posts = getPosts(nick, n=500)
+for post in posts[10:]:
+    ai.train(nick, post)
+    
+"""
