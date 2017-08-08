@@ -76,16 +76,17 @@ def getTweets(nick, n=500):
     
     return tweets
 
-nick = 'MalcolmNance'
-posts = getTweets(nick, n=100)
-for post in posts[10:]:
-    ai.train(nick, post)
+MalcolmNance = getTweets('MalcolmNance', n=1000)
+for post in MalcolmNance[5:]:
+    ai.train('MalcolmNance', post)
 
-nick = 'th3j35t3r' 
-posts = getTweets(nick, n=100)
-for post in posts[10:]:
-    ai.train(nick, post)
+th3j35t3r = getTweets('th3j35t3r', n=1000)
+for post in th3j35t3r[5:]:
+    ai.train('th3j35t3r', post)
 
+nthcolumn = getTweets('nthcolumn', n=1000)
+for post in nthcolumn[5:]:
+    ai.train('nthcolumn', post)
 
 """
     
