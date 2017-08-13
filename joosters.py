@@ -88,6 +88,24 @@ nthcolumn = getTweets('nthcolumn', n=1000)
 for post in nthcolumn[5:]:
     ai.train('nthcolumn', post)
 
+def geo_mean(iterable):
+    a = np.array(iterable)
+    return a.prod()**(1.0/len(a))
+    
+T1, T2, N3 = [], [], 0    
+for post in posts:
+    scores = sentiment(post.decode('unicode_escape').encode('ascii','ignore'))
+    polarity = scores[0]
+    if (polarity > 0):
+        T1.append(polarity)
+    elif (polarity < 0):
+        T2.append(polarity)
+    elif (polarity == 0):
+        N3 += 1
+    else:
+        pass
+    
+
 """
     
 nick = 'weev' # hate this guy 
