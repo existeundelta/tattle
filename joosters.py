@@ -92,19 +92,36 @@ def geo_mean(iterable):
     a = np.array(iterable)
     return a.prod()**(1.0/len(a))
     
-T1, T2, N3 = [], [], 0    
-for post in posts:
-    scores = sentiment(post.decode('unicode_escape').encode('ascii','ignore'))
-    polarity = scores[0]
-    if (polarity > 0):
-        T1.append(polarity)
-    elif (polarity < 0):
-        T2.append(polarity)
-    elif (polarity == 0):
-        N3 += 1
-    else:
-        pass
-    
+def avg_geo_mean(posts):
+    T1, T2, N3 = [], [], 0    
+    for post in posts:
+        post = post.decode('unicode_escape').encode('ascii','ignore')
+        scores = sentiment(post)
+        polarity = scores[0]
+        if (polarity > 0):
+            T1.append(polarity)
+        elif (polarity < 0):
+            T2.append(polarity)
+        elif (polarity == 0):
+            N3 += 1
+        else:
+            pass
+            
+    N1 = len(T1)
+    N2 = len(T2)
+    G1 = geo_mean(T1)
+    G2 = geo_mean(T2)
+    N = N1+N2+N3
+    AGM = (N1*G1 - N2*G2)/N
+    return AGM
+
+        
+# reduce(lambda x, y: x*y, numbers)**(1.0/len(numbers))
+
+nick = 'nthcolumn' # hate this guy joosters 
+posts = getPosts(nick, n=500)
+for post in posts[10:]:
+    ai.train(nick, post)
 
 """
     
