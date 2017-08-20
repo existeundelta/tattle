@@ -63,28 +63,75 @@ def getPosts(nick, n=100):
     return posts
 
 def getTweets(nick, n=500):
-    with open('config.json') as data_file: jsons = json.load(data_file)
-    auth = tweepy.OAuthHandler(jsons['twitter']['consumer_key']
-                             , jsons['twitter']['consumer_secret'])
-    auth.set_access_token(jsons['twitter']['access_token_key']
-                        , jsons['twitter']['access_token_secret'])
+    with open('config.json') as data_file: twitter = json.load(data_file)
+    auth = tweepy.OAuthHandler(twitter['consumer_key']
+                             , twitter['consumer_secret'])
+    auth.set_access_token(twitter['access_token_key']
+                        , twitter['access_token_secret'])
     api = tweepy.API(auth)
     tweets = api.user_timeline(nick, count=n)
-    tweets = [tweet.text.encode("utf-8") for tweet in tweets]
-        
+    tweets = [tweet.text.encode("utf-8") if tweet.author.screen_name == nick else None for tweet in tweets]
+    
     return tweets
 
-nick = 'shalmanese' # hate this guy joosters 
+MalcolmNance = getTweets('MalcolmNance', n=1000)
+for post in MalcolmNance[5:]:
+    ai.train('MalcolmNance', post)
+
+th3j35t3r = getTweets('th3j35t3r', n=1000)
+for post in th3j35t3r[5:]:
+    ai.train('th3j35t3r', post)
+
+nthcolumn = getTweets('nthcolumn', n=1000)
+for post in nthcolumn[5:]:
+    ai.train('nthcolumn', post)
+
+def geo_mean(iterable):
+    a = np.array(iterable)
+    return a.prod()**(1.0/len(a))
+    
+def avg_geo_mean(posts):
+    T1, T2, N3 = [], [], 0    
+    for post in posts:
+        post = post.decode('unicode_escape').encode('ascii','ignore')
+        scores = sentiment(post)
+        polarity = scores[0]
+        if (polarity > 0):
+            T1.append(polarity)
+        elif (polarity < 0):
+            T2.append(polarity)
+        elif (polarity == 0):
+            N3 += 1
+        else:
+            pass
+            
+    N1 = len(T1)
+    N2 = len(T2)
+    G1 = geo_mean(T1)
+    G2 = geo_mean(T2)
+    N = N1+N2+N3
+    AGM = (N1*G1 - N2*G2)/N
+    return AGM
+
+        
+# reduce(lambda x, y: x*y, numbers)**(1.0/len(numbers))
+
+nick = 'nthcolumn' # hate this guy joosters 
 posts = getPosts(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
 
-nick = 'th3j35t3r' # hate this guy 
-posts = getTweets(nick, n=500)
-for post in posts[10:]:
-    ai.train(nick, post)
+"""
     
 nick = 'weev' # hate this guy 
 posts = getReddit(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
+
+
+nick = 'shalmanese' # hate this guy joosters 
+posts = getPosts(nick, n=500)
+for post in posts[10:]:
+    ai.train(nick, post)
+    
+"""
