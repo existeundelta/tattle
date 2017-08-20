@@ -7,8 +7,6 @@ from random import randint
 import os, sys, requests, pattern, json, tweepy
 from bs4 import BeautifulSoup
 
-os.chdir('c://home//docs//tattle')
-
 from six.moves.html_parser import HTMLParser
 
 h = HTMLParser() 
