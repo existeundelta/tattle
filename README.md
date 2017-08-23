@@ -4,4 +4,4 @@ Stylometric analysis of OSINT data using machine learning, Bayesian libraries, N
 
 Twitter/YCominator/Reddit
 
-![alt tag](https://raw.githubusercontent.com/hollerith/tattle/master/cryptanalysis/construction-dog-photo2.png)
+![alt tag](https://raw.githubusercontent.com/hollerith/tattle/master/cryptanalysis/construction-dog-photos2.jpg)
