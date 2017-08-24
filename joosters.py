@@ -73,19 +73,7 @@ def getTweets(nick, n=500):
     tweets = [tweet.text.encode("utf-8") if tweet.author.screen_name == nick else None for tweet in tweets]
     
     return tweets
-
-MalcolmNance = getTweets('MalcolmNance', n=1000)
-for post in MalcolmNance[5:]:
-    ai.train('MalcolmNance', post)
-
-th3j35t3r = getTweets('th3j35t3r', n=1000)
-for post in th3j35t3r[5:]:
-    ai.train('th3j35t3r', post)
-
-nthcolumn = getTweets('nthcolumn', n=1000)
-for post in nthcolumn[5:]:
-    ai.train('nthcolumn', post)
-
+   
 def geo_mean(iterable):
     a = np.array(iterable)
     return a.prod()**(1.0/len(a))
@@ -122,12 +110,23 @@ for post in posts[10:]:
     ai.train(nick, post)
 
 """
+
+MalcolmNance = getTweets('MalcolmNance', n=1000)
+for post in MalcolmNance[5:]:
+    ai.train('MalcolmNance', post)
+
+th3j35t3r = getTweets('th3j35t3r', n=1000)
+for post in th3j35t3r[5:]:
+    ai.train('th3j35t3r', post)
+
+aroliso = getTweets('aroliso', n=1000)
+for post in aroliso[5:]:
+    ai.train('aroliso', post)
     
 nick = 'weev' 
 posts = getReddit(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
-
 
 nick = 'shalmanese' #  
 posts = getPosts(nick, n=500)
