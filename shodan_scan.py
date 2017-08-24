@@ -5,7 +5,7 @@ import time
 from bs4 import BeautifulSoup
 import shodan
 
-with open('./Documents/tattle/config.json') as data_file: jsons = json.load(data_file)
+with open('config.json') as data_file: jsons = json.load(data_file)
 api = shodan.Shodan(jsons['shodan']['api_key'])
 
 url = 'https://www.bugcrowd.com/bug-bounty-list/'
