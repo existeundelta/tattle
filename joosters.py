@@ -116,20 +116,20 @@ def avg_geo_mean(posts):
         
 # reduce(lambda x, y: x*y, numbers)**(1.0/len(numbers))
 
-nick = 'nthcolumn' # hate this guy joosters 
+nick = 'nthcolumn' 
 posts = getPosts(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
 
 """
     
-nick = 'weev' # hate this guy 
+nick = 'weev' 
 posts = getReddit(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
 
 
-nick = 'shalmanese' # hate this guy joosters 
+nick = 'shalmanese' #  
 posts = getPosts(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
