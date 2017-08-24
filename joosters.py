@@ -116,7 +116,7 @@ def avg_geo_mean(posts):
         
 # reduce(lambda x, y: x*y, numbers)**(1.0/len(numbers))
 
-nick = 'nthcolumn' 
+nick = 'scut' 
 posts = getPosts(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
