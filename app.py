@@ -22,5 +22,10 @@ def hello(name):
 
     return render_template('main.html', **locals())
 
+@app.route("/doxx/<string:name>/")
+def doxx(name):
+    
+    return render_template('main.html', **locals())
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80)
