@@ -58,8 +58,7 @@ def getPosts(nick, n=100):
     for id in postIds[:n]:
         post = hn.get_item(id).text or " "
         soup = BeautifulSoup(post, "lxml")
-        posts.append(h.unescape(soup.get_text()))
-
+        posts.append(h.unescape(soup.get_text()))        
     return posts
 
 def getTweets(nick, n=500):
@@ -71,7 +70,6 @@ def getTweets(nick, n=500):
     api = tweepy.API(auth)
     tweets = api.user_timeline(nick, count=n)
     tweets = [tweet.text.encode("utf-8") if tweet.author.screen_name == nick else None for tweet in tweets]
-
     return tweets
 
 def geo_mean(iterable):
@@ -104,7 +102,7 @@ def avg_geo_mean(posts):
 
 # reduce(lambda x, y: x*y, numbers)**(1.0/len(numbers))
 
-nick = 'scut'
+nick = 'nthcolumn'
 posts = getPosts(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
