@@ -2,11 +2,12 @@
 import mechanize
 import cookielib
 import time
-from random import randint
-
 import os, sys, requests, pattern, json, tweepy
-from bs4 import BeautifulSoup
+import numpy as np
 
+from random import randint
+from pattern.en import sentiment
+from bs4 import BeautifulSoup
 from six.moves.html_parser import HTMLParser
 
 h = HTMLParser()
@@ -62,11 +63,11 @@ def getPosts(nick, n=100):
     return posts
 
 def getTweets(nick, n=500):
-    with open('config.json') as data_file: twitter = json.load(data_file)
-    auth = tweepy.OAuthHandler(twitter['consumer_key']
-                             , twitter['consumer_secret'])
-    auth.set_access_token(twitter['access_token_key']
-                        , twitter['access_token_secret'])
+    with open('config.json') as data_file: settings = json.load(data_file)
+    auth = tweepy.OAuthHandler(settings['twitter']['consumer_key']
+                             , settings['twitter']['consumer_secret'])
+    auth.set_access_token(settings['twitter']['access_token_key']
+                        , settings['twitter']['access_token_secret'])
     api = tweepy.API(auth)
     tweets = api.user_timeline(nick, count=n)
     tweets = [tweet.text.encode("utf-8") if tweet.author.screen_name == nick else None for tweet in tweets]
@@ -76,10 +77,14 @@ def geo_mean(iterable):
     a = np.array(iterable)
     return a.prod()**(1.0/len(a))
 
-def avg_geo_mean(posts):
+# average geometric mean polarity
+def meanness(posts):
     T1, T2, N3 = [], [], 0
     for post in posts:
-        post = post.decode('unicode_escape').encode('ascii','ignore')
+        try:
+            post = post.decode('unicode_escape').encode('ascii','ignore')
+        except Exception as error:
+            print error.message
         scores = sentiment(post)
         polarity = scores[0]
         if (polarity > 0):
@@ -90,7 +95,7 @@ def avg_geo_mean(posts):
             N3 += 1
         else:
             pass
-
+            
     N1 = len(T1)
     N2 = len(T2)
     G1 = geo_mean(T1)
