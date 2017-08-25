@@ -1,4 +1,4 @@
-# nthcolumn  🔹‏
+# nthcolumn 
 import mechanize
 import cookielib
 import time
@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 
 from six.moves.html_parser import HTMLParser
 
-h = HTMLParser() 
+h = HTMLParser()
 
 from reverend.thomas import Bayes
 ai = Bayes()
@@ -18,12 +18,12 @@ from hackernews import HackerNews
 hn = HackerNews()
 
 #build browser object
-br = mechanize.Browser() 
- 
+br = mechanize.Browser()
+
 # set cookies
 cookies = cookielib.LWPCookieJar()
 br.set_cookiejar(cookies)
- 
+
 # browser settings (used to emulate a browser)
 br.set_handle_equiv(True)
 br.set_handle_redirect(True)
@@ -59,7 +59,7 @@ def getPosts(nick, n=100):
         post = hn.get_item(id).text or " "
         soup = BeautifulSoup(post, "lxml")
         posts.append(h.unescape(soup.get_text()))
-                
+
     return posts
 
 def getTweets(nick, n=500):
@@ -71,15 +71,15 @@ def getTweets(nick, n=500):
     api = tweepy.API(auth)
     tweets = api.user_timeline(nick, count=n)
     tweets = [tweet.text.encode("utf-8") if tweet.author.screen_name == nick else None for tweet in tweets]
-    
+
     return tweets
-   
+
 def geo_mean(iterable):
     a = np.array(iterable)
     return a.prod()**(1.0/len(a))
-    
+
 def avg_geo_mean(posts):
-    T1, T2, N3 = [], [], 0    
+    T1, T2, N3 = [], [], 0
     for post in posts:
         post = post.decode('unicode_escape').encode('ascii','ignore')
         scores = sentiment(post)
@@ -92,7 +92,7 @@ def avg_geo_mean(posts):
             N3 += 1
         else:
             pass
-            
+
     N1 = len(T1)
     N2 = len(T2)
     G1 = geo_mean(T1)
@@ -101,10 +101,10 @@ def avg_geo_mean(posts):
     AGM = (N1*G1 - N2*G2)/N
     return AGM
 
-        
+
 # reduce(lambda x, y: x*y, numbers)**(1.0/len(numbers))
 
-nick = 'scut' 
+nick = 'scut'
 posts = getPosts(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
@@ -122,15 +122,15 @@ for post in th3j35t3r[5:]:
 aroliso = getTweets('aroliso', n=1000)
 for post in aroliso[5:]:
     ai.train('aroliso', post)
-    
-nick = 'weev' 
+
+nick = 'weev'
 posts = getReddit(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
 
-nick = 'shalmanese' #  
+nick = 'shalmanese' #
 posts = getPosts(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
-    
+
 """
