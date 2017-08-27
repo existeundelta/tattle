@@ -75,23 +75,24 @@ def getTweets(nick, n=500):
 
 def geo_mean(iterable):
     a = np.array(iterable)
-    return a.prod()**(1.0/len(a))
+    if len(a): 
+        return a.prod()**(1.0/len(a))
 
-# average geometric mean polarity
-def meanness(posts):
+# average geometric mean polarity/subjectivity
+def meanness(posts, type=0):
     T1, T2, N3 = [], [], 0
     for post in posts:
         try:
-            post = post.decode('unicode_escape').encode('ascii','ignore')
+            post = post.encode('ascii','ignore')
         except Exception as error:
-            print error.message
+            pass
         scores = sentiment(post)
-        polarity = scores[0]
-        if (polarity > 0):
-            T1.append(polarity)
-        elif (polarity < 0):
-            T2.append(polarity)
-        elif (polarity == 0):
+        point = scores[type]
+        if (point > 0):
+            T1.append(point)
+        elif (point < 0):
+            T2.append(point)
+        elif (point == 0):
             N3 += 1
         else:
             pass
@@ -104,13 +105,52 @@ def meanness(posts):
     AGM = (N1*G1 - N2*G2)/N
     return AGM
 
-
 # reduce(lambda x, y: x*y, numbers)**(1.0/len(numbers))
 
 nick = 'nthcolumn'
 posts = getPosts(nick, n=500)
 for post in posts[10:]:
+    with open('./corpora/%s.txt' % nick, 'a') as file: text = file.write(post+os.linesep)
     ai.train(nick, post)
+
+
+for post in posts:
+    with open('./corpora/%s.txt' % nick, 'a') as file: 
+        post = post.encode('ascii','ignore')
+        if post:
+            text = file.write(post+os.linesep)
+        
+    
+text = file.write(+os.linesep)
+
+
+def fullstopfeature(posts):
+    z = 0
+    total = 0
+    
+    periods = []
+    
+    for post in posts:
+        z = z + 1
+        period_count = post.count('.')
+        period_count = int(period_count)
+        periods.append(period_count)
+        total = total + period_count
+    
+    # this gives us our final metrics
+    z = int(z)
+    average_period = total / z
+    total_period = total
+    
+    print
+    print
+    print "Average period count: ", average_period
+    print
+    print "Total period count: ", total_period
+
+
+with open('./corpora/sense.txt') as file: text = file.read()
+posts = text.replace('\n','').split('.')
 
 """
 
