@@ -119,35 +119,22 @@ for post in posts:
         post = post.encode('ascii','ignore')
         if post:
             text = file.write(post+os.linesep)
-        
-    
-text = file.write(+os.linesep)
 
-
-def fullstopfeature(posts):
-    z = 0
+def countfeature(posts, feature):
     total = 0
-    
-    periods = []
-    
     for post in posts:
-        z = z + 1
-        period_count = post.count('.')
-        period_count = int(period_count)
-        periods.append(period_count)
-        total = total + period_count
+        count = post.count(feature)
+        total += int(count)
     
     # this gives us our final metrics
-    z = int(z)
-    average_period = total / z
-    total_period = total
+    z = len(posts)
+    average = total / z
     
     print
     print
-    print "Average period count: ", average_period
-    print
-    print "Total period count: ", total_period
-
+    print "Average : ", average
+    print "Total: ", total
+    
 
 with open('./corpora/sense.txt') as file: text = file.read()
 posts = text.replace('\n','').split('.')
