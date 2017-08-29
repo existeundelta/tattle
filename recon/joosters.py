@@ -128,7 +128,7 @@ def countfeature(posts, feature):
     
     # this gives us our final metrics
     z = len(posts)
-    average = total / z
+    average = float(total) / z
     
     print
     print
@@ -138,6 +138,9 @@ def countfeature(posts, feature):
 
 with open('./corpora/sense.txt') as file: text = file.read()
 posts = text.replace('\n','').split('.')
+
+# neat way of ripping grams 
+# gramlist = [sentence[i:i+N] for i in xrange(len(sentence)-N+1)]
 
 """
 

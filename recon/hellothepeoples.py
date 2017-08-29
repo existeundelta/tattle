@@ -3,8 +3,10 @@ import tweepy
 import json
 import time
 from bs4 import BeautifulSoup
+import os
 
-with open('/home/dad/Documents/tattle/config.json') as data_file: jsons = json.load(data_file)
+os.chdir('/home/dad/Documents/tattle/')
+with open('config.json') as data_file: jsons = json.load(data_file)
 auth = tweepy.OAuthHandler(jsons['twitter']['consumer_key'], jsons['twitter']['consumer_secret'])
 auth.set_access_token(jsons['twitter']['access_token_key'], jsons['twitter']['access_token_secret'])
 api = tweepy.API(auth)
@@ -20,3 +22,11 @@ while True:
         api.update_status(post[:140])
         break        
     time.sleep(Zzz)
+
+
+s = requests.Session()
+s.auth = ('user', 'pass')
+s.headers.update({'x-test': 'true'})
+
+# both 'x-test' and 'x-test2' are sent
+s.get('http://httpbin.org/headers', headers={'x-test2': 'true'})
