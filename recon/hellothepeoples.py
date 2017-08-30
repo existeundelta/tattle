@@ -6,10 +6,11 @@ from bs4 import BeautifulSoup
 import os
 
 os.chdir('/home/dad/Documents/tattle/')
-with open('config.json') as data_file: jsons = json.load(data_file)
-auth = tweepy.OAuthHandler(jsons['twitter']['consumer_key'], jsons['twitter']['consumer_secret'])
-auth.set_access_token(jsons['twitter']['access_token_key'], jsons['twitter']['access_token_secret'])
-api = tweepy.API(auth)
+with open('config.json') as data_file: 
+    jsons = json.load(data_file)
+    auth = tweepy.OAuthHandler(jsons['twitter']['consumer_key'], jsons['twitter']['consumer_secret'])
+    auth.set_access_token(jsons['twitter']['access_token_key'], jsons['twitter']['access_token_secret'])
+    api = tweepy.API(auth)
 
 url = 'https://steemit.com/@theshadowbrokers'
 
@@ -22,11 +23,3 @@ while True:
         api.update_status(post[:140])
         break        
     time.sleep(Zzz)
-
-
-s = requests.Session()
-s.auth = ('user', 'pass')
-s.headers.update({'x-test': 'true'})
-
-# both 'x-test' and 'x-test2' are sent
-s.get('http://httpbin.org/headers', headers={'x-test2': 'true'})
