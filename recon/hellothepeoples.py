@@ -16,10 +16,15 @@ url = 'https://steemit.com/@theshadowbrokers'
 
 Zzz = 1800
 while True:
-    r = requests.get(url)
-    soup = BeautifulSoup(r.content, "lxml")
-    post = soup.h3.a.text
-    if not post == u'TheShadowBrokers Monthly Dump Service - August 2017':
-        api.update_status(post[:140])
-        break        
-    time.sleep(Zzz)
+    try:
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content, "lxml")
+        post = soup.h3.a.text
+        if not post == u'TheShadowBrokers Monthly Dump Service - August 2017':
+            api.update_status(post[:140])
+            break        
+        time.sleep(Zzz)
+    except Exception as error:
+        print error.message
+    
+
