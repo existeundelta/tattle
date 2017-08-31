@@ -36,6 +36,7 @@ br.set_debug_redirects(False)
 br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time = 1)
 br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
 
+# pastebin
 def getPasteURLs():
     pastebin = 'http://pastebin.com/archive'
     latest = requests.get(pastebin).content
@@ -44,12 +45,6 @@ def getPasteURLs():
     links = table[0].findAll('a')
     urls = [link['href'] for link in links if len(link['href'])<10]
     return urls
-
-def getPostIds(nick):
-    userl = 'https://hacker-news.firebaseio.com/v0/user/%s.json?print=pretty' % nick
-    r = requests.get(userl)
-    user = json.loads(r.content)
-    return user['submitted']
 
 # reddit
 def getReddit(nick, n=100):
@@ -61,6 +56,12 @@ def getReddit(nick, n=100):
     return threads[:n]
 
 # hackernews
+def getPostIds(nick):
+    userl = 'https://hacker-news.firebaseio.com/v0/user/%s.json?print=pretty' % nick
+    r = requests.get(userl)
+    user = json.loads(r.content)
+    return user['submitted']
+
 def getPosts(nick, n=100):
     text = ""
     postIds = getPostIds(nick)
