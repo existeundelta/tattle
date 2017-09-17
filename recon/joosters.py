@@ -93,26 +93,27 @@ def meanness(posts, type=0):
     T1, T2, N3 = [], [], 0
     for post in posts:
         try:
-            post = post.encode('ascii','ignore')
+            post = post.decode('utf-8',errors='ignore')
         except Exception as error:
+            print post, error.message
             pass
         scores = sentiment(post)
         point = scores[type]
         if (point > 0):
             T1.append(point)
         elif (point < 0):
-            T2.append(point)
+            T2.append(abs(point))
         elif (point == 0):
             N3 += 1
         else:
             pass
-            
+    
     N1 = len(T1)
     N2 = len(T2)
     G1 = geo_mean(T1)
     G2 = geo_mean(T2)
     N = N1+N2+N3
-    AGM = (N1*G1 - N2*G2)/N
+    AGM = (N1*G1 - N2*G2)/N    
     return AGM
 
 # reduce(lambda x, y: x*y, numbers)**(1.0/len(numbers))
