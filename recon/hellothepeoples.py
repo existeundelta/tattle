@@ -5,7 +5,6 @@ import time
 from bs4 import BeautifulSoup
 import os
 
-os.chdir('/home/dad/Documents/tattle/')
 with open('config.json') as data_file: 
     jsons = json.load(data_file)
     auth = tweepy.OAuthHandler(jsons['twitter']['consumer_key'], jsons['twitter']['consumer_secret'])
