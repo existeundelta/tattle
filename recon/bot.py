@@ -3,14 +3,14 @@ import json
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
-from tweepy import API 
+from tweepy import API
 
 from pattern.en import sentiment
 from nltk.chat import eliza
 
 chatbot = eliza.Chat(eliza.pairs)
 
-with open('config.json') as data_file: settings = json.load(data_file)
+with open('./Documents/tattle/config.json') as data_file: settings = json.load(data_file)
 
 consumer_key = settings['twitter']['consumer_key']
 consumer_secret = settings['twitter']['consumer_secret']
@@ -29,7 +29,7 @@ class ReplyToTweet(StreamListener):
     def on_data(self, data):
         print data
         tweet = json.loads(data.strip())
-        
+
         retweeted = tweet.get('retweeted')
         from_self = tweet.get('user',{}).get('id_str','') == account_user_id
 
@@ -45,7 +45,7 @@ class ReplyToTweet(StreamListener):
 
             #check if repsonse is over 140 char
             if len(replyText) > 140:
-                replyText = replyText[0:139] + '…'
+                replyText = replyText[0:139] + ' '
 
             print('Tweet ID: ' + tweetId)
             print('From: ' + screenName)
