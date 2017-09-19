@@ -1,1 +1,8 @@
 flask
+haxor
+beautifulsoup4
+requests
+mechanize
+twitter
+pattern
+
