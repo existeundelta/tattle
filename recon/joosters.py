@@ -19,7 +19,7 @@ from hackernews import HackerNews
 hn = HackerNews()
     
 # pastebin
-def getPasteURLs():
+def getPastes():
     pastebin = 'http://pastebin.com/archive'
     latest = requests.get(pastebin).content
     soup = BeautifulSoup(latest, "lxml")

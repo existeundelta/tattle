@@ -42,6 +42,8 @@ def kill():
 passwords = [':admin', ':1234', 'xc3511', 'GMB182', 'Zte521', 'vizxv', 'oelinux123', 'jauntech']
 passwords = "(.*" + ".*)|(.*".join(passwords) + ".*)"
 
+justOnce = True
+
 Zzz = 240
 while True:
     try:
@@ -86,3 +88,5 @@ while True:
     except Exception as error:
         print error.message
         
+    if justOnce: break
+    
