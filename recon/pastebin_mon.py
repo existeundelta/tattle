@@ -69,7 +69,7 @@ while True:
                 continue
                 
             # check for admins
-            pwned = re.findall(passwords,text)   
+            pwned = re.findall(passwords, text)   
             if pwned:
                 print 'Admin passwords'
                 pois.append((file, 'pwned', text,))
@@ -82,11 +82,16 @@ while True:
                 pois.append((file, 'keys', text,))
                 continue
                         
-        if len(pois): save(pois)
-        print 'Checking again in %s minutes' % (Zzz/60)
-        time.sleep(Zzz)        
+        if len(pois): 
+            save(pois)
+            
     except Exception as error:
         print error.message
         
-    if justOnce: break
+    if justOnce: 
+        break
+    else:
+        print 'Checking again in %s minutes' % (Zzz/60)
+        time.sleep(Zzz) 
+    
     
