@@ -4,6 +4,9 @@ import time
 
 from bs4 import BeautifulSoup
 from requests import get as GET
+
+# https://fnpaste.com/zrKE
+# http://siph0n.in/exploits.php?id=4756
    
 def read():
     latest = GET('http://pastebin.com/archive').content
