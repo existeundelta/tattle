@@ -17,6 +17,18 @@ ai = Bayes()
 
 from hackernews import HackerNews
 hn = HackerNews()
+
+with open('./Documents/tattle/config.json') as data_file: 
+    settings = json.load(data_file)
+
+consumer_key = settings['twitter']['consumer_key']    
+consumer_secret = settings['twitter']['consumer_secret']
+access_key = settings['twitter']['access_token_key']
+access_secret = settings['twitter']['access_token_secret']
+
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_key, access_secret)
+twitter = tweepy.API(auth)
     
 # pastebin
 def getPastes():
@@ -54,14 +66,13 @@ def getPosts(nick, n=100):
         posts.append(h.unescape(soup.get_text()))        
     return posts
 
-def getTweets(nick, n=500):
-    with open('config.json') as data_file: settings = json.load(data_file)
-    auth = tweepy.OAuthHandler(settings['twitter']['consumer_key']
-                             , settings['twitter']['consumer_secret'])
-    auth.set_access_token(settings['twitter']['access_token_key']
-                        , settings['twitter']['access_token_secret'])
-    api = tweepy.API(auth)
-    tweets = api.user_timeline(nick, count=n)
+def getTweets(search):
+    tweets = tweepy.Cursor(twitter.search, q=search, count=100, lang='en')
+    tweets = [tweet.text.encode("utf-8") if tweet.author.screen_name == nick else None for tweet in tweets]
+    return tweets
+
+def getUserTweets(nick, n=500):
+    tweets = twitter.user_timeline(nick, count=n)
     tweets = [tweet.text.encode("utf-8") if tweet.author.screen_name == nick else None for tweet in tweets]
     return tweets
 
@@ -105,6 +116,14 @@ posts = getPosts(nick, n=500)
 for post in posts[10:]:
     with open('./corpora/%s.txt' % nick, 'a') as file: text = file.write(post+os.linesep)
     ai.train(nick, post)
+
+posts = tweets
+
+for post in posts:
+    with open('./corpora/%s.txt' % nick, 'a') as file: 
+        post = post.encode('ascii','ignore')
+        if post:
+            text = file.write(post+os.linesep)
 
 
 for post in posts:
