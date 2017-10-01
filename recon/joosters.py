@@ -27,7 +27,7 @@ access_key = settings['twitter']['access_token_key']
 access_secret = settings['twitter']['access_token_secret']
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_key, access_secret)
+auth.set_access_token(access_token, access_secret)
 twitter = tweepy.API(auth)
     
 # pastebin
@@ -66,14 +66,14 @@ def getPosts(nick, n=100):
         posts.append(h.unescape(soup.get_text()))        
     return posts
 
-def getTweets(search):
-    tweets = tweepy.Cursor(twitter.search, q=search, count=100, lang='en')
+def getTweets(search, n=200):
+    tweets = tweepy.Cursor(twitter.search, q=search, count=n, lang='en')
     tweets = [tweet.text.encode("utf-8") if tweet.author.screen_name == nick else None for tweet in tweets]
     return tweets
 
 def getUserTweets(nick, n=500):
     tweets = twitter.user_timeline(nick, count=n)
-    tweets = [tweet.text.encode("utf-8") if tweet.author.screen_name == nick else None for tweet in tweets]
+    tweets = [tweet.text.encode("ascii", 'ignore') if tweet.author.screen_name == nick else None for tweet in tweets]
     return tweets
 
 def geo_mean(iterable):
