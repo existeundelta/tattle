@@ -198,4 +198,64 @@ posts = getPosts(nick, n=500)
 for post in posts[10:]:
     ai.train(nick, post)
 
+    print tweet.text
+import itertools
+url = 'http://%s.s3.amazonaws.com/' % word
+combos = itertools.permutations('a-z0-9-_.',13)
+    url = 'http://%s.s3.amazonaws.com/' % word
+    response = requests.head(url)
+    if response.status == 200:
+        print url
+for word in combos:
+    print word
+combos = itertools.permutations("i3^4hUP-",8)
+combos = itertools.permutations('a-z0-9',13)
+combos = itertools.permutations('a-z0-9', 8)
+for x in combos:print x
+comb = itertools.permutations("1234",4)
+for x in comb: 
+  ''.join(x)
+comb = itertools.permutations("a-z",4)
+for x in comb: 
+  ''.join(x)
+comb = itertools.permutations("abcdefghijklmnopqrstuvwxyz",4)
+for x in comb: 
+  ''.join(x)
+  
+
+from requests import head as HEAD
+from itertools import permutations
+from string import ascii_lowercase, digits
+  
+characters = digits + ascii_lowercase + '.-_'
+for x in permutations(characters, 6):
+    word = ''.join(x)
+    url = 'http://%s.s3.amazonaws.com/' % word
+    response = HEAD(url)
+    if response.status_code == 200:
+        print url
+
+
+import requests
+with open("/home/dad/Downloads/rockyou.txt") as infile:
+    for line in infile:
+        url = 'http://%s.s3.amazonaws.com/' % line.strip()
+        try:
+            response = requests.head(url)
+            if response.status_code == 200: 
+                print url
+        except:
+            print line.strip()
+
+from itertools import permutations
+from string import ascii_lowercase, digits
+  
+characters = digits + ascii_lowercase
+for x in permutations(characters, 6):
+    word = ''.join(x)
+    url = 'http://%s.s3.amazonaws.com/' % word
+    response = HEAD(url)
+    if response.status_code == 200:
+        print url
+
 """
