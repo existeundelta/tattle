@@ -75,8 +75,3 @@ password = browser.find_element_by_id("password")
 username.send_keys('nfarring')
 password.send_keys(secret)
 browser.execute_script("submitForm()")
-
-
-
-
-
