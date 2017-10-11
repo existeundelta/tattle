@@ -11,7 +11,7 @@ http://ppg.s3.amazonaws.com/
 http://aramark.s3.amazonaws.com/
 http://csc.s3.amazonaws.com/
 http://adp.s3.amazonaws.com/
-"corporate.murphyusa
+http://murphyusa.s3.amazonaws.com/
 http://biogen.s3.amazonaws.com/
 http://hertz.s3.amazonaws.com/
 http://huntsman.s3.amazonaws.com/
