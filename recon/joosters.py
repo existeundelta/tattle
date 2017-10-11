@@ -222,40 +222,32 @@ comb = itertools.permutations("abcdefghijklmnopqrstuvwxyz",4)
 for x in comb: 
   ''.join(x)
   
+"""
 
-from requests import head as HEAD
+import requests
 from itertools import permutations
 from string import ascii_lowercase, digits
   
-characters = digits + ascii_lowercase + '.-_'
-for x in permutations(characters, 6):
-    word = ''.join(x)
-    url = 'http://%s.s3.amazonaws.com/' % word
-    response = HEAD(url)
-    if response.status_code == 200:
-        print url
-
-
-import requests
-with open("/home/dad/Downloads/rockyou.txt") as infile:
-    for line in infile:
-        url = 'http://%s.s3.amazonaws.com/' % line.strip()
+rainbow = "/home/dad/Downloads/rockyou.txt"
+rainbow = "/home/dad/Documents/topdoms.txt"
+with open(rainbow) as infile:
+    for word in infile:
+        url = 'http://%s.s3.amazonaws.com/' % word.strip()
         try:
             response = requests.head(url)
             if response.status_code == 200: 
                 print url
         except:
-            print line.strip()
+            print word.strip()
 
-from itertools import permutations
-from string import ascii_lowercase, digits
-  
-characters = digits + ascii_lowercase
-for x in permutations(characters, 6):
+characters = digits + ascii_lowercase + '.-_'
+for x in permutations(characters, 3):
     word = ''.join(x)
     url = 'http://%s.s3.amazonaws.com/' % word
-    response = HEAD(url)
-    if response.status_code == 200:
-        print url
+    try:
+        response = requests.head(url)
+        if response.status_code == 200: 
+            print url
+    except:
+        print word
 
-"""
