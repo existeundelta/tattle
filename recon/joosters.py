@@ -263,14 +263,45 @@ for x in permutations(characters, 3):
     except:
         print word
 
-cache = "s3.txt"
+cache = "c:/home/docs/tattle/recon/s3.txt"
 with open(cache) as infile:
     for word in infile:
         url = word.strip()
         try:
             sample = requests.get(url).content
-            matches = re.findall(r'<Key>(\s*(.*(zip|pem|sql|csv|xls|tgz|dmp|rsa|tok|tar|bak|p12)))(?=\n</Key)', sample)
+            matches = re.findall(r'<Key>(\s*(.*(zip|pem|sql|csv|xls|txt)))(?=\n</Key)', sample)
             for match in matches:
                 print '%s/%s' % (url, match[1])
         except:
             print url
+
+regex = re.compile('.*<Key>(.*(zip|jpg|JPG)).*</Key.*')
+
+sm = soup.find_all('key', text=re.compile("JPG|png"));
+
+import requests, re
+from bs4 import BeautifulSoup
+
+regex = re.compile("(zip|pem|sql|csv|xls|txt|doc)", re.I)
+
+cache = "s3.txt"
+with open(cache) as infile: 
+  urls = infile.read().split('\n')
+
+for url in urls:
+    try:
+        sample = requests.get(url).content
+        soup = BeautifulSoup(sample, "lxml")
+        matches = soup.find_all('key', text=regex);
+        for match in matches:
+            print '%s/%s' % (url, match.text)
+    except:
+        print url
+      
+      
+with open("results.json", 'a') as outfile:
+  outfile.write(json.dumps(urls))
+  for url in urls:
+     outfile.write('<li><a href="%s">%s</a></li>\n' % (url, url))
+  outfile.write('<ul>')
+

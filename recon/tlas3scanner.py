@@ -10,7 +10,7 @@ for x in permutations(characters, 3):
         response = requests.head(url)
         if response.status_code == 200: 
             sample = requests.get(url).content
-            matches = re.findall(r'<Key>(\s*(.*(zip|pem|sql|csv|xls|tgz|dmp|rsa|tok|tar|bak|p12)))(?=\n</Key)', sample)
+            matches = re.findall(r'<Key>(\s*(.*(zip|pem|sql|csv|xls)))(?=\n</Key)', sample)
             for match in matches:
                 print 'http://%s.s3.amazonaws.com/%s' % (word, match[1])
     except:
