@@ -278,30 +278,27 @@ with open(cache) as infile:
 regex = re.compile('.*<Key>(.*(zip|jpg|JPG)).*</Key.*')
 
 sm = soup.find_all('key', text=re.compile("JPG|png"));
+with open("results.json", 'a') as outfile:
+    outfile.write(json.dumps(urls))
+
 
 import requests, re
 from bs4 import BeautifulSoup
 
-regex = re.compile("(zip|pem|sql|csv|xls|txt|doc)", re.I)
+regex = re.compile("(\.zip|\.pem|\.sql|\.csv|\.xls|\.txt|\.doc)", re.I)
 
-cache = "s3.txt"
-with open(cache) as infile: 
+with open("topdoms.txt") as infile: 
   urls = infile.read().split('\n')
 
-for url in urls:
-    try:
-        sample = requests.get(url).content
-        soup = BeautifulSoup(sample, "lxml")
-        matches = soup.find_all('key', text=regex);
-        for match in matches:
-            print '%s/%s' % (url, match.text)
-    except:
-        print url
-      
-      
-with open("results.json", 'a') as outfile:
-  outfile.write(json.dumps(urls))
-  for url in urls:
-     outfile.write('<li><a href="%s">%s</a></li>\n' % (url, url))
-  outfile.write('<ul>')
-
+with open("results.html", 'w') as outfile:
+    for url in urls:
+        try:
+            full = 'http://%s.s3.amazonaws.com/' % url
+            sample = requests.get(full).content
+            soup = BeautifulSoup(sample, "lxml")
+            matches = soup.find_all('key', text=regex)
+            for match in matches:
+                path = match.text
+                outfile.write('<a href="%s%s">%s</a>\n' % (full,path,path))
+        except:
+            print url, match.text

@@ -1,32 +1,22 @@
-public = """
-<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-	<Name>digipublic</Name>
-	<Prefix></Prefix>
-	<Marker></Marker>
-	<MaxKeys>1000</MaxKeys>
-	<IsTruncated>false</IsTruncated>
-</ListBucketResult>
-"""
+import requests, re
+from bs4 import BeautifulSoup
 
-private = """
-<Error>
-	<Code>AccessDenied</Code>
-	<Message>Access Denied</Message>
-	<RequestId>7F3987394757439B</RequestId>
-	<HostId>kyMIhkpoWafjruFFairkfim383jtznAnwiyKSTxv7+/CIHqMBcqrXV2gr+EuALUp</HostId>
-</Error>
-"""
+regex = re.compile("(\.zip|\.pem|\.sql|\.csv|\.xls|\.doc)", re.I)
 
-notfound = """
-<Error>
-    <Code>NoSuchBucket</Code>
-    <Message>The specified bucket does not exist</Message>
-    <BucketName>publicdesk</BucketName>
-    <RequestId>E297102A871CF5ED</RequestId>
-    <HostId>
-XYVXa90dZ34B9BsuP7QcaZCM9RDcKbjJYIa/bs7LuBXBG08MDOOBRr1/YcPEnk/BO/sNdIDdguM=
-    </HostId>
-</Error>
-"""
+with open("topdoms.txt") as infile: 
+  urls = infile.read().split('\n')
 
-
+with open("results.html", 'w') as outfile:
+    for url in urls:
+        try:
+            full = 'http://%s.s3.amazonaws.com/' % url
+            sample = requests.get(full).content
+            soup = BeautifulSoup(sample, "lxml")
+            matches = soup.find_all('key', text=regex)
+            for match in matches:
+                path = match.text
+                outfile.write('<a href="%s%s">%s</a>\n' % (full,path,path))
+                print "%s%s" % (full, match.text)
+        except:
+            print url 
+            
