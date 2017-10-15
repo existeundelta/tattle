@@ -302,3 +302,24 @@ with open("results.html", 'w') as outfile:
                 outfile.write('<a href="%s%s">%s</a>\n' % (full,path,path))
         except:
             print url, match.text
+
+
+print(data)
+
+
+for url in urls:
+    try:
+        # knock
+        response = requests.get(url,proxies=proxies)
+        if response.status_code == 200:
+            with open("onions.csv", 'a') as outfile:
+                outfile.write(url) 
+                print "Found     :: %s" % urn
+            
+        # progress
+        if urls.index(url) % 1000 == 0:
+            print "Processed :: %s" % url
+    except:
+        print "Tried     :: %s" % url
+
+
