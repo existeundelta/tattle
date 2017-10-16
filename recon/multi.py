@@ -2,73 +2,84 @@ import os
 import json
 import logging
 
-from pathlib import Path
-from urllib.request import urlopen, Request
 from time import time
 from queue import Queue
 from threading import Thread
 import multiprocessing
+
+import requests, re
+from bs4 import BeautifulSoup
+from itertools import permutations
+from string import ascii_lowercase, digits
+
+# find buckets with files with these  
+regex = re.compile("(\.zip|\.pem|\.sql|\.csv|\.xls|\.doc)", re.I)
 
 POOLSIZE = multiprocessing.cpu_count()
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logging.getLogger('requests').setLevel(logging.CRITICAL)
 logger = logging.getLogger(__name__)
+   
+def check(url):
+    logger.info('Checking %s', url)
+    full = 'http://%s.s3.amazonaws.com/' % url
+    response = requests.head(full)
+    if response.status_code == 200:
+        print "Found     :: %s" % full
+        with open("cache.csv", 'a') as outfile:
+            outfile.write(full) 
+        # enter
+        response = requests.get(full)
+        soup = BeautifulSoup(response.content, "lxml")
+        matches = soup.find_all('key', text=regex)
+        for match in matches:
+            path = match.text
+            urn = "%s%s" % (full, match.text)
+            with open("results.html", 'a') as outfile:
+                outfile.write('<a href="%s">%s</a>\n' % (urn,path))
+            # auto download feature
+            # response = requests.get(urn)
+            print "Matched   :: %s" % urn
+    else:
+        print "Not found :: %s" % full
 
-def get_links(client_id):
-    headers = {'Authorization': 'Client-ID {}'.format(client_id)}
-    request = Request('https://api.imgur.com/3/gallery/', headers=headers, method='GET')
-    with urlopen(request) as response:
-        data = json.loads(response.readall().decode('utf-8'))
-    return map(lambda item: item['link'], data['data'])
-
-def download_link(directory, link):
-    logger.info('Downloading %s', link)
-    download_path = directory / os.path.basename(link)
-    with urlopen(link) as image, download_path.open('wb') as f:
-        f.write(image.readall())
-
-def setup_download_dir():
-    download_dir = Path('images')
-    if not download_dir.exists():
-        download_dir.mkdir()
-    return download_dir
-
-class DownloadWorker(Thread):
+class BucketFinder(Thread):
     def __init__(self, queue):
         Thread.__init__(self)
         self.queue = queue
-
+        
     def run(self):
         while True:
             # Get the work from the queue and expand the tuple
-            directory, link = self.queue.get()
-            download_link(directory, link)
+            url = self.queue.get()
+            try:
+                check(url)            
+            except:
+                print "Failed   :: %s" % url
             self.queue.task_done()
 
 def main():
     ts = time()
-    client_id = os.getenv('IMGUR_CLIENT_ID')
-    if not client_id:
-        raise Exception("Couldn't find IMGUR_CLIENT_ID environment variable!")
-    download_dir = setup_download_dir()
-    links = [l for l in get_links(client_id) if l.endswith('.jpg')]
     
     # Create a queue to communicate with the worker threads
     queue = Queue()
+    
     # Create worker threads
     for x in range(POOLSIZE):
-        worker = DownloadWorker(queue)
+        worker = BucketFinder(queue)
         # Setting daemon to True will let the main thread exit even though the workers are blocking
         worker.daemon = True
         worker.start()
         
-    # Put the tasks into the queue as a tuple
-    for link in links:
-        logger.info('Queueing {}'.format(link))
-        queue.put((download_dir, link))
-        
+    # Put the tasks into the queue as a tuple    
+    with open("c:/home/docs/tattle/recon/topdoms.txt") as infile: 
+        urls = infile.read().split('\n')
+    
+    for url in urls:
+        logger.info('Queueing {}'.format(url))
+        queue.put(url)
+    
     # Causes the main thread to wait for the queue to finish processing all the tasks
     queue.join()
     print('Took {}'.format(time() - ts))
-    
