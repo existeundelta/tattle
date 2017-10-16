@@ -10,6 +10,10 @@ regex = re.compile("(\.zip|\.pem|\.sql|\.csv|\.xls|\.doc)", re.I)
 with open("topdoms.txt") as infile: 
   urls = infile.read().split('\n')
 
+# all 370k top words
+with open("words.txt") as infile: 
+  urls = infile.read().split('\n')
+
 # all four character words
 characters = digits + ascii_lowercase #+ '.-_'
 urls += [''.join(chars) for chars in permutations(characters, 4)]
