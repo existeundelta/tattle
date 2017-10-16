@@ -1,5 +1,7 @@
 *.pyc
 config.json
 *.db
+recon/*.txt
+
 
 

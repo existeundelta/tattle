@@ -15,7 +15,7 @@ from string import ascii_lowercase, digits
 # find buckets with files with these  
 regex = re.compile("(\.zip|\.pem|\.sql|\.csv|\.xls|\.doc)", re.I)
 
-POOLSIZE = multiprocessing.cpu_count() * 2
+POOLSIZE = multiprocessing.cpu_count() * 4
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logging.getLogger('requests').setLevel(logging.CRITICAL)
@@ -41,8 +41,6 @@ def check(url):
             # auto download feature
             # response = requests.get(urn)
             print "Matched   :: %s" % urn
-    else:
-        print "Not found :: %s" % full
 
 class BucketFinder(Thread):
     def __init__(self, queue):
@@ -73,9 +71,10 @@ def main():
         worker.start()
         
     # Put the tasks into the queue as a tuple    
-    with open("c:/home/docs/tattle/recon/topdoms.txt") as infile: 
+    with open("words.txt") as infile: 
         urls = infile.read().split('\n')
-    urls = urls[-493:]
+    urls = urls[:-1493]
+    
     for url in urls:
         logger.info('Queueing {}'.format(url))
         queue.put(url)
