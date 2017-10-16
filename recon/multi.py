@@ -15,7 +15,7 @@ from string import ascii_lowercase, digits
 # find buckets with files with these  
 regex = re.compile("(\.zip|\.pem|\.sql|\.csv|\.xls|\.doc)", re.I)
 
-POOLSIZE = multiprocessing.cpu_count()
+POOLSIZE = multiprocessing.cpu_count() * 2
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logging.getLogger('requests').setLevel(logging.CRITICAL)
@@ -75,7 +75,7 @@ def main():
     # Put the tasks into the queue as a tuple    
     with open("c:/home/docs/tattle/recon/topdoms.txt") as infile: 
         urls = infile.read().split('\n')
-    
+    urls = urls[-493:]
     for url in urls:
         logger.info('Queueing {}'.format(url))
         queue.put(url)
