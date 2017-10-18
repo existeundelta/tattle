@@ -28,7 +28,7 @@ def check(url):
     if response.status_code == 200:
         print "Found     :: %s" % full
         with open("cache.csv", 'a') as outfile:
-            outfile.write(full) 
+            outfile.write(full+'\n')
         # enter
         response = requests.get(full)
         soup = BeautifulSoup(response.content, "lxml")
@@ -73,7 +73,9 @@ def main():
     # Put the tasks into the queue as a tuple    
     with open("words.txt") as infile: 
         urls = infile.read().split('\n')
-    urls = urls[:-1493]
+    
+    urls = [''.join(chars) for chars in permutations(characters, 4)]
+    urls = urls[urls.index('f3id'):]
     
     for url in urls:
         logger.info('Queueing {}'.format(url))
