@@ -71,16 +71,20 @@ def main():
         worker.start()
         
     # Put the tasks into the queue as a tuple    
+    
+    # rockyou-like dictionary
     with open("words.txt") as infile: 
         urls = infile.read().split('\n')
     
-    urls = [''.join(chars) for chars in permutations(characters, 4)]
-    urls = urls[urls.index('f3id'):]
+    urls += [''.join(chars) for chars in permutations(characters, 3)] 
+    urls += [''.join(chars) for chars in permutations(characters, 4)] 
+
+    urls = list(set(urls)) # make unique
     
     for url in urls:
         logger.info('Queueing {}'.format(url))
         queue.put(url)
-    
+        
     # Causes the main thread to wait for the queue to finish processing all the tasks
     queue.join()
     print('Took {}'.format(time() - ts))
