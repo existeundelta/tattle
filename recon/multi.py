@@ -21,27 +21,6 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logging.getLogger('requests').setLevel(logging.CRITICAL)
 logger = logging.getLogger(__name__)
    
-def check(url):
-    logger.info('Checking %s', url)
-    full = 'http://%s.s3.amazonaws.com/' % url
-    response = requests.head(full)
-    if response.status_code == 200:
-        print "Found     :: %s" % full
-        with open("cache.csv", 'a') as outfile:
-            outfile.write(full+'\n')
-        # enter
-        response = requests.get(full)
-        soup = BeautifulSoup(response.content, "lxml")
-        matches = soup.find_all('key', text=regex)
-        for match in matches:
-            path = match.text
-            urn = "%s%s" % (full, match.text)
-            with open("results.html", 'a') as outfile:
-                outfile.write('<a href="%s">%s</a>\n' % (urn,path))
-            # auto download feature
-            # response = requests.get(urn)
-            print "Matched   :: %s" % urn
-
 def trawl(url):
     logger.info('Trawling %s', url)
     full = 'http://%s.s3.amazonaws.com/' % url
@@ -52,11 +31,13 @@ def trawl(url):
         contents = soup.find_all('contents')
         for each in contents:
             if re.search(regex, each.key.text):
-                name = each.key.text
-                stamp, size = each.key.size, each.lastmodified.text
-                mask = '%s,%s,%s,%s,%s'
-                line = (url,full,name,stamp,size)
-                print >>'results.csv', mask % line
+                with open('results.csv', 'a') as csv:
+                    name = each.key.text
+                    stamp = each.lastmodified.text
+                    size = each.size.text
+                    line = '%s,%s,%s,%s,%s' % (url,full,name,stamp,size)
+                    print line
+                    csv.write(line.encode('utf-8', 'ignore'))
 
 class BucketFinder(Thread):
     def __init__(self, queue):
