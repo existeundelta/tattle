@@ -13,7 +13,7 @@ from itertools import permutations
 from string import ascii_lowercase, digits
 
 # find buckets with files with these  
-regex = re.compile("(\.zip|\.pem|\.sql|\.csv|\.xls|\.doc)", re.I)
+regex = re.compile("(\.zip|\.pem|\.key|\.sql|\.csv|\.xls|\.doc)", re.I)
 
 POOLSIZE = multiprocessing.cpu_count() * 4
 
@@ -42,6 +42,22 @@ def check(url):
             # response = requests.get(urn)
             print "Matched   :: %s" % urn
 
+def trawl(url):
+    logger.info('Trawling %s', url)
+    full = 'http://%s.s3.amazonaws.com/' % url
+    response = requests.head(full)
+    if response.status_code == 200:
+        response = requests.get(full)
+        soup = BeautifulSoup(response.content, "lxml")
+        contents = soup.find_all('contents')
+        for each in contents:
+            if re.search(regex, each.key.text):
+                name = each.key.text
+                stamp, size = each.key.size, each.lastmodified.text
+                mask = '%s,%s,%s,%s,%s'
+                line = (url,full,name,stamp,size)
+                print >>'results.csv', mask % line
+
 class BucketFinder(Thread):
     def __init__(self, queue):
         Thread.__init__(self)
@@ -52,7 +68,7 @@ class BucketFinder(Thread):
             # Get the work from the queue and expand the tuple
             url = self.queue.get()
             try:
-                check(url)            
+                trawl(url)            
             except:
                 print "Failed   :: %s" % url
             self.queue.task_done()
