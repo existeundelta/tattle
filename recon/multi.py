@@ -63,12 +63,9 @@ def main():
     # Create worker threads
     for x in range(POOLSIZE):
         worker = BucketFinder(queue)
-        # Setting daemon to True will let the main thread exit even though the workers are blocking
         worker.daemon = True
         worker.start()
-        
-    # Put the tasks into the queue as a tuple    
-    
+            
     # rockyou-like dictionary
     with open("words.txt") as infile: 
         urls = infile.read().split('\n')
@@ -78,6 +75,7 @@ def main():
 
     urls = list(set(urls)) # make unique
     
+    # Put the tasks into the queue as a tuple    
     for url in urls:
         logger.info('Queueing {}'.format(url))
         queue.put(url)
